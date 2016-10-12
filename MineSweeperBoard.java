@@ -5,11 +5,13 @@ public class MineSweeperBoard {
 	private Cell[][] cells;
 	private int xSize;
 	private int ySize;
+	private int flagsAvailable;
 	
 	public MineSweeperBoard(int x, int y) {
 		cells = new Cell[x][y];
 		xSize = x;
 		ySize = y;
+		flagsAvailable = 0;
 		
 		for (int j = 0; j < x; ++j) {
 			for (int i = 0; i < y; ++i) {	
@@ -78,17 +80,21 @@ public class MineSweeperBoard {
 	}
 
 	public void flag(int x, int y) {
-		cells[x][y].setFlag(true);
+		if(flagsAvailable < 0) {
+			cells[x][y].setFlag(true);
+			--flagsAvailable;
+		}
 	}
 	
 	public void unflag(int x, int y) {
 		cells[x][y].setFlag(false);
+		++flagsAvailable;
 	}
 
 	public String toString() {
 		String grid = "";
-		for (int y = 0; y < 8; ++y) {
-			for (int x = 0; x < 8; ++x) {
+		for (int y = 0; y < ySize; ++y) {
+			for (int x = 0; x < xSize; ++x) {
 				if (cells[x][y].isMine()) {
 					grid += "x";
 				}
@@ -106,7 +112,7 @@ public class MineSweeperBoard {
 	}
 
 	public static void main(String[] args) {
-		MineSweeperBoard mineSweeperBoard = new MineSweeperBoard(8, 8);
+		MineSweeperBoard mineSweeperBoard = new MineSweeperBoard(10, 10);
 		
 		System.out.println(mineSweeperBoard);
 	}
