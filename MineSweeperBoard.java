@@ -57,11 +57,14 @@ public class MineSweeperBoard {
 	private int adjacent(int x, int y) {
 		int count = 0;
 
+		//loops through the adjacent tiles
 		for(int j = y - 1; j <= y + 1; ++j) {
 			for(int i = x - 1; i <= x + 1; ++i) {
+				//if any of the index is out of bounds, then skip iteration
 				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
 					continue;
 				}
+				//if the indexs are equal to the coordinate being checked, then skip iteration
 				else if((i == x) && (j == y)) {
 					continue;
 				}
@@ -72,6 +75,14 @@ public class MineSweeperBoard {
 		}
 
 		return count;
+	}
+
+	public void flag(int x, int y) {
+		cells[x][y].setFlag(true);
+	}
+	
+	public void unflag(int x, int y) {
+		cells[x][y].setFlag(false);
 	}
 
 	public String toString() {
