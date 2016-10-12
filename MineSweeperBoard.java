@@ -13,9 +13,11 @@ public class MineSweeperBoard {
 				cells[i][j] = new Cell();
 			}
 		}
+
+		newGame();
 	}
 
-	public void newGame() {
+	private void newGame() {
 		//loops 10 times		
 		for (int i = 0; i < 10; ++i) {
 			Random random = new Random();
@@ -37,6 +39,26 @@ public class MineSweeperBoard {
 			//sets the new Cell to have the mine
 			cells[x][y].setMine(true);
 		}
-	}	
+	}
+
+	public String toString() {
+		String grid = "";
+		for (int y = 0; y < 10; ++y) {
+			for (int x = 0; x < 10; ++x) {
+				if (cells[x][y].isMine()) {
+					grid += "x";
+				}
+				else if(cells[x][y].isFlag()) {
+					grid += "X";
+				}
+				else {
+					grid += "0";
+				}
+			}
+			grid += "\n";
+		}
+		
+		return grid;
+	}
 	
 }
