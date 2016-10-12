@@ -3,13 +3,16 @@ import java.util.Random;
 public class MineSweeperBoard {
 	
 	private Cell[][] cells;
+	private int xSize;
+	private int ySize;
 	
 	public MineSweeperBoard(int x, int y) {
 		cells = new Cell[x][y];
+		xSize = x;
+		ySize = y;
 		
 		for (int j = 0; j < x; ++j) {
-			for (int i = 0; i < y; ++i) {
-				
+			for (int i = 0; i < y; ++i) {	
 				cells[i][j] = new Cell();
 			}
 		}
@@ -39,6 +42,36 @@ public class MineSweeperBoard {
 			//sets the new Cell to have the mine
 			cells[xCell][yCell].setMine(true);
 		}
+
+		// String s = "";
+		for(int j = 0; j < ySize; ++j) {
+			for(int i = 0; i < xSize; ++i) {
+				cells[i][j].setAdjacent(adjacent(i, j));
+				// s += cells[i][j].getAdjacent();
+			}
+			// s += "\n";
+		}
+		// System.out.println(s);
+	}
+
+	private int adjacent(int x, int y) {
+		int count = 0;
+
+		for(int j = y - 1; j <= y + 1; ++j) {
+			for(int i = x - 1; i <= x + 1; ++i) {
+				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
+					continue;
+				}
+				else if((i == x) && (j == y)) {
+					continue;
+				}
+				else if(cells[i][j].isMine()) {
+					++count;
+				}
+			}
+		}
+
+		return count;
 	}
 
 	public String toString() {
