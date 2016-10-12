@@ -7,44 +7,44 @@ public class MineSweeperBoard {
 	public MineSweeperBoard(int x, int y) {
 		cells = new Cell[x][y];
 		
-		for (int j = 0; j < 10; ++j) {
-			for (int i = 0; i < 10; ++i) {
+		for (int j = 0; j < x; ++j) {
+			for (int i = 0; i < y; ++i) {
 				
 				cells[i][j] = new Cell();
 			}
 		}
 
-		newGame();
+		newGame(x, y);
 	}
 
-	private void newGame() {
+	private void newGame(int x, int y) {
 		//loops 10 times		
 		for (int i = 0; i < 10; ++i) {
 			Random random = new Random();
-			int x = random.nextInt(10);
-			int y = random.nextInt(10);
+			int xCell = random.nextInt(x);
+			int yCell = random.nextInt(y);
 			
 			//if the current Cell is already a mine
-			if(cells[x][y].isMine()) {
+			if(cells[xCell][yCell].isMine()) {
 				//keep looping until the current Cell is not a mine
-				while(cells[x][y].isMine()) {
+				while(cells[xCell][yCell].isMine()) {
 					random = new Random();
 					//set x as new random number
-					x = random.nextInt(10);
+					xCell = random.nextInt(x);
 					//set y as new random number
-					y = random.nextInt(10);
+					yCell = random.nextInt(y);
 				}
 			}
 			
 			//sets the new Cell to have the mine
-			cells[x][y].setMine(true);
+			cells[xCell][yCell].setMine(true);
 		}
 	}
 
 	public String toString() {
 		String grid = "";
-		for (int y = 0; y < 10; ++y) {
-			for (int x = 0; x < 10; ++x) {
+		for (int y = 0; y < 8; ++y) {
+			for (int x = 0; x < 8; ++x) {
 				if (cells[x][y].isMine()) {
 					grid += "x";
 				}
@@ -59,6 +59,12 @@ public class MineSweeperBoard {
 		}
 		
 		return grid;
+	}
+
+	public static void main(String[] args) {
+		MineSweeperBoard mineSweeperBoard = new MineSweeperBoard(8, 8);
+		
+		System.out.println(mineSweeperBoard);
 	}
 	
 }
