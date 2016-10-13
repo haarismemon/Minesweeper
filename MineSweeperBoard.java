@@ -6,12 +6,20 @@ public class MineSweeperBoard {
 	private int xSize;
 	private int ySize;
 	private int flagsAvailable;
+	private int revealedCells;
+	private boolean gameLost;
+	private boolean gameWon;
+	private int totalMines;
 	
-	public MineSweeperBoard(int x, int y) {
+	public MineSweeperBoard(int x, int y, int numOfMines) {
 		cells = new Cell[x][y];
 		xSize = x;
 		ySize = y;
+		totalMines = numOfMines;
 		flagsAvailable = 0;
+		revealedCells = 0;
+		gameLost = false;
+		gameWon = true;
 		
 		for (int j = 0; j < x; ++j) {
 			for (int i = 0; i < y; ++i) {	
@@ -91,15 +99,43 @@ public class MineSweeperBoard {
 		++flagsAvailable;
 	}
 
+	public void reveal(int x, int y) {
+		//loops through the adjacent tiles
+		for(int j = y - 1; j <= y + 1; ++j) {
+			for(int i = x - 1; i <= x + 1; ++i) {
+				//if any of the index is out of bounds, then skip iteration
+				if(i >= 0 || i < xSize || j >= 0 || j < ySize) {
+					if(!cells[i][j].isMine()) {
+						cells[i][j].setRevealed(true);
+						cells[i][j].setFlag(false);
+						++revealedCells;
+
+						if(revealedCells == (xSize * ySize) - totalMines) {
+							gameWon = true;
+						}
+
+					}
+					else {
+//						System.out.println("Game Lost!!! Mine at (" + i + ", " + j + ")");
+						gameLost = true;
+					}
+				}
+			}
+		}
+	}
+
 	public String toString() {
 		String grid = "";
 		for (int y = 0; y < ySize; ++y) {
 			for (int x = 0; x < xSize; ++x) {
-				if (cells[x][y].isMine()) {
-					grid += "x";
+				if (cells[x][y].isMine() && cells[x][y].isRevealed()) {
+					grid += "O";
 				}
-				else if(cells[x][y].isFlag()) {
+				else if(cells[x][y].isRevealed()) {
 					grid += "X";
+				}
+				else if (cells[x][y].isMine()) {
+					grid += "x";
 				}
 				else {
 					grid += "0";
@@ -112,7 +148,9 @@ public class MineSweeperBoard {
 	}
 
 	public static void main(String[] args) {
-		MineSweeperBoard mineSweeperBoard = new MineSweeperBoard(10, 10);
+		MineSweeperBoard mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
+
+		mineSweeperBoard.reveal(3,2);
 		
 		System.out.println(mineSweeperBoard);
 	}
