@@ -20,6 +20,9 @@ public class MineSweeper extends Application {
 
     private Button[][] buttonGrid;
     private MineSweeperBoard mineSweeperBoard;
+    private Label flagLabel;
+    private Label cellsLabel;
+    private Label winLossLabel;
 
     public void start(Stage primaryStage) {
         mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
@@ -27,9 +30,9 @@ public class MineSweeper extends Application {
 
         Button newGameBtn = new Button("New Game");
         Button exitBtn = new Button("Exit");
-        Label flagLabel = new Label("0/10 flags");
-        Label cellsLabel = new Label("0/100 cells");
-        Label winLossLabel = new Label("Game Outcome");
+        flagLabel = new Label("0/10 flags");
+        cellsLabel = new Label("0/100 cells");
+        winLossLabel = new Label("Game Outcome");
 
         primaryStage.setTitle("MineSweeper");
 
@@ -56,7 +59,7 @@ public class MineSweeper extends Application {
 
         for(int j = 0; j < 10; ++j) {
             for(int i = 0; i < 10; ++i) {
-                Button cellBtn = new Button("C");
+                Button cellBtn = new Button(" ");
                 cellBtn.setPrefSize(35, 35);
                 buttonGrid[i][j] = cellBtn;
                 grid.add(cellBtn, i, j);
@@ -99,7 +102,15 @@ public class MineSweeper extends Application {
             @Override
             public void handle(MouseEvent event) {
                 mineSweeperBoard.newGame(10,10);
+                disableAllButtons(false);
                 updateBoard();
+            }
+        });
+
+        exitBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                primaryStage.close();
             }
         });
 
@@ -116,6 +127,7 @@ public class MineSweeper extends Application {
                 if(cell.isRevealed()) {
                     if (cell.isMine()) {
                         cellBtn.setText("M");
+                        disableAllButtons(true);
                     } else {
                         cellBtn.setText("" + cell.getAdjacent());
                     }
@@ -123,12 +135,35 @@ public class MineSweeper extends Application {
                     if(cell.isFlag()) {
                         cellBtn.setText("F");
                     } else {
-                        cellBtn.setText("C");
+                        cellBtn.setText(" ");
                     }
                 }
             }
         }
+
+        flagLabel.setText(mineSweeperBoard.getFlagsCount() + "/10 flags");
+        cellsLabel.setText(mineSweeperBoard.getRevealedCells() + "/100 cells");
+
+        if(mineSweeperBoard.isGameLost()) {
+            winLossLabel.setText("Game Over");
+        } else if (mineSweeperBoard.isGameWon()) {
+            winLossLabel.setText("Game Won!");
+        }
+        else {
+            winLossLabel.setText("Game Outcome");
+        }
+
+
     }
+
+    private void disableAllButtons(boolean bool) {
+        for(int j = 0; j < 10; ++j) {
+            for (int i = 0; i < 10; ++i) {
+                buttonGrid[i][j].setDisable(bool);
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         launch(args);

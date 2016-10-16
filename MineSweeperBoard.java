@@ -16,15 +16,16 @@ public class MineSweeperBoard {
 		xSize = x;
 		ySize = y;
 		totalMines = numOfMines;
-		flagsCount = 0;
-		revealedCells = 0;
-		gameLost = false;
-		gameWon = true;
 
 		newGame(x, y);
 	}
 
 	public void newGame(int x, int y) {
+		flagsCount = 0;
+		revealedCells = 0;
+		gameLost = false;
+		gameWon = false;
+
 		for (int j = 0; j < x; ++j) {
 			for (int i = 0; i < y; ++i) {
 				cells[i][j] = new Cell();
@@ -101,15 +102,15 @@ public class MineSweeperBoard {
 
 	public void reveal(int x, int y) {
 		//loops through the adjacent tiles
-		for(int j = y - 1; j <= y + 1; ++j) {
-			for(int i = x - 1; i <= x + 1; ++i) {
-				//if any of the index is out of bounds, then skip iteration
-				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
-					continue;
-				} else {
-					if(!cells[i][j].isMine()) {
-						cells[i][j].setRevealed(true);
-						cells[i][j].setFlag(false);
+//		for(int j = y - 1; j <= y + 1; ++j) {
+//			for(int i = x - 1; i <= x + 1; ++i) {
+//				//if any of the index is out of bounds, then skip iteration
+//				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
+//					continue;
+//				} else {
+					if(!cells[x][y].isMine()) {	//meant to be i and j
+						cells[x][y].setRevealed(true);	//meant to be i and j
+						cells[x][y].setFlag(false);	//meant to be i and j
 						++revealedCells;
 
 						if(revealedCells == (xSize * ySize) - totalMines) {
@@ -119,13 +120,15 @@ public class MineSweeperBoard {
 					}
 					else {
 //						System.out.println("Game Lost!!! Mine at (" + i + ", " + j + ")");
-						cells[i][j].setRevealed(true);
-						gameLost = true;
+						if(cells[x][y].isMine()) {
+							cells[x][y].setRevealed(true);
+							gameLost = true;
+						}
 					}
-				}
+//				}
 
-			}
-		}
+//			}
+//		}
 	}
 
 	public Cell getCell(int x, int y) {
@@ -134,6 +137,18 @@ public class MineSweeperBoard {
 	
 	public int getFlagsCount() {
 		return flagsCount;
+	}
+
+	public int getRevealedCells() {
+		return revealedCells;
+	}
+
+	public boolean isGameLost() {
+		return gameLost;
+	}
+
+	public boolean isGameWon() {
+		return gameWon;
 	}
 
 	public String toString() {
