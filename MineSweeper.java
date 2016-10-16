@@ -95,6 +95,14 @@ public class MineSweeper extends Application {
             }
         }
 
+        newGameBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mineSweeperBoard.newGame(10,10);
+                updateBoard();
+            }
+        });
+
         border.setCenter(grid);
 
         primaryStage.show();

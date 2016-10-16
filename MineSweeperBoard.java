@@ -20,17 +20,17 @@ public class MineSweeperBoard {
 		revealedCells = 0;
 		gameLost = false;
 		gameWon = true;
-		
-		for (int j = 0; j < x; ++j) {
-			for (int i = 0; i < y; ++i) {	
-				cells[i][j] = new Cell();
-			}
-		}
 
 		newGame(x, y);
 	}
 
 	public void newGame(int x, int y) {
+		for (int j = 0; j < x; ++j) {
+			for (int i = 0; i < y; ++i) {
+				cells[i][j] = new Cell();
+			}
+		}
+
 		//loops 10 times		
 		for (int i = 0; i < 10; ++i) {
 			Random random = new Random();
