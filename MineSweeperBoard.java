@@ -108,6 +108,7 @@ public class MineSweeperBoard {
 //				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
 //					continue;
 //				} else {
+				if(!cells[x][y].isRevealed()) {
 					if(!cells[x][y].isMine()) {	//meant to be i and j
 						cells[x][y].setRevealed(true);	//meant to be i and j
 						cells[x][y].setFlag(false);	//meant to be i and j
@@ -125,7 +126,7 @@ public class MineSweeperBoard {
 							gameLost = true;
 						}
 					}
-//				}
+				}
 
 //			}
 //		}
