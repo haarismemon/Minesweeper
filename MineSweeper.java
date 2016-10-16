@@ -1,9 +1,13 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -14,8 +18,12 @@ import javafx.stage.Stage;
  */
 public class MineSweeper extends Application {
 
+    private Button[][] buttonGrid;
+    private MineSweeperBoard mineSweeperBoard;
+
     public void start(Stage primaryStage) {
-        Button[][] buttonGrid = new Button[10][10];
+        mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
+        buttonGrid = new Button[10][10];
 
         Button newGameBtn = new Button("New Game");
         Button exitBtn = new Button("Exit");
@@ -48,16 +56,70 @@ public class MineSweeper extends Application {
 
         for(int j = 0; j < 10; ++j) {
             for(int i = 0; i < 10; ++i) {
-                Button button = new Button("C");
-                button.setPrefSize(35, 35);
-                buttonGrid[i][j] = button;
-                grid.add(button, i, j);
+                Button cellBtn = new Button("C");
+                cellBtn.setPrefSize(35, 35);
+                buttonGrid[i][j] = cellBtn;
+                grid.add(cellBtn, i, j);
+
+                final int x = i;
+                final int y = j;
+
+                cellBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        Cell cellClicked = mineSweeperBoard.getCell(x, y);
+
+                        if(event.getButton() == MouseButton.PRIMARY) {
+                            if(cellClicked.isMine()) {
+                                cellBtn.setText("M");
+                                mineSweeperBoard.reveal(x, y);
+                                winLossLabel.setText("Game Over");
+                            } else {
+                                cellBtn.setText("" + cellClicked.getAdjacent());
+                                mineSweeperBoard.reveal(x, y);
+                            }
+                            updateBoard();
+                        }
+                        else if (event.getButton() == MouseButton.SECONDARY) {
+                            if(mineSweeperBoard.getFlagsCount() <= 10) {
+                                if(!cellClicked.isFlag()) {
+                                    mineSweeperBoard.flag(x, y);
+                                    cellBtn.setText("F");
+                                    flagLabel.setText(mineSweeperBoard.getFlagsCount() + "/10 flags");
+                                }
+                            }
+                        }
+                    }
+                });
+
             }
         }
 
         border.setCenter(grid);
 
         primaryStage.show();
+    }
+
+    private void updateBoard() {
+        for(int j = 0; j < 10; ++j) {
+            for (int i = 0; i < 10; ++i) {
+                Cell cell = mineSweeperBoard.getCell(i, j);
+                Button cellBtn =  buttonGrid[i][j];
+                if(cell.isRevealed()) {
+                    if (cell.isMine()) {
+                        cellBtn.setText("M");
+                    } else {
+                        cellBtn.setText("" + cell.getAdjacent());
+                    }
+                } else {
+                    if(cell.isFlag()) {
+                        cellBtn.setText("F");
+                    } else {
+                        cellBtn.setText("C");
+                    }
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {

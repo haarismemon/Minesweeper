@@ -5,7 +5,7 @@ public class MineSweeperBoard {
 	private Cell[][] cells;
 	private int xSize;
 	private int ySize;
-	private int flagsAvailable;
+	private int flagsCount;
 	private int revealedCells;
 	private boolean gameLost;
 	private boolean gameWon;
@@ -16,7 +16,7 @@ public class MineSweeperBoard {
 		xSize = x;
 		ySize = y;
 		totalMines = numOfMines;
-		flagsAvailable = 0;
+		flagsCount = 0;
 		revealedCells = 0;
 		gameLost = false;
 		gameWon = true;
@@ -30,7 +30,7 @@ public class MineSweeperBoard {
 		newGame(x, y);
 	}
 
-	private void newGame(int x, int y) {
+	public void newGame(int x, int y) {
 		//loops 10 times		
 		for (int i = 0; i < 10; ++i) {
 			Random random = new Random();
@@ -88,15 +88,15 @@ public class MineSweeperBoard {
 	}
 
 	public void flag(int x, int y) {
-		if(flagsAvailable < 0) {
+		if(flagsCount < 10) {
 			cells[x][y].setFlag(true);
-			--flagsAvailable;
+			++flagsCount;
 		}
 	}
 	
 	public void unflag(int x, int y) {
 		cells[x][y].setFlag(false);
-		++flagsAvailable;
+		--flagsCount;
 	}
 
 	public void reveal(int x, int y) {
@@ -104,7 +104,9 @@ public class MineSweeperBoard {
 		for(int j = y - 1; j <= y + 1; ++j) {
 			for(int i = x - 1; i <= x + 1; ++i) {
 				//if any of the index is out of bounds, then skip iteration
-				if(i >= 0 || i < xSize || j >= 0 || j < ySize) {
+				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
+					continue;
+				} else {
 					if(!cells[i][j].isMine()) {
 						cells[i][j].setRevealed(true);
 						cells[i][j].setFlag(false);
@@ -117,11 +119,21 @@ public class MineSweeperBoard {
 					}
 					else {
 //						System.out.println("Game Lost!!! Mine at (" + i + ", " + j + ")");
+						cells[i][j].setRevealed(true);
 						gameLost = true;
 					}
 				}
+
 			}
 		}
+	}
+
+	public Cell getCell(int x, int y) {
+		return cells[x][y];
+	}
+	
+	public int getFlagsCount() {
+		return flagsCount;
 	}
 
 	public String toString() {
@@ -147,12 +159,12 @@ public class MineSweeperBoard {
 		return grid;
 	}
 
-	public static void main(String[] args) {
-		MineSweeperBoard mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
-
-		mineSweeperBoard.reveal(3,2);
-		
-		System.out.println(mineSweeperBoard);
-	}
+//	public static void main(String[] args) {
+//		MineSweeperBoard mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
+//
+//		mineSweeperBoard.reveal(3,2);
+//
+//		System.out.println(mineSweeperBoard);
+//	}
 	
 }
