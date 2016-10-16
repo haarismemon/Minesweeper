@@ -14,23 +14,37 @@ import javafx.stage.Stage;
  */
 public class MineSweeper extends Application {
 
-    private Button[][] buttonGrid;
-
     public void start(Stage primaryStage) {
-        buttonGrid = new Button[10][10];
+        Button[][] buttonGrid = new Button[10][10];
+
+        Button newGameBtn = new Button("New Game");
+        Button exitBtn = new Button("Exit");
+        Label flagLabel = new Label("0/10 flags");
+        Label cellsLabel = new Label("0/100 cells");
+        Label winLossLabel = new Label("Game Outcome");
 
         primaryStage.setTitle("MineSweeper");
 
         BorderPane border = new BorderPane();
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(15, 12, 15, 12));
+        hBox.setSpacing(30);
+        hBox.setAlignment(Pos.CENTER);
+        border.setTop(hBox);
 
-        Scene scene = new Scene(border, 510, 580);
+        hBox.getChildren().add(newGameBtn);
+        hBox.getChildren().add(flagLabel);
+        hBox.getChildren().add(cellsLabel);
+        hBox.getChildren().add(winLossLabel);
+        hBox.getChildren().add(exitBtn);
+
+        Scene scene = new Scene(border, 520, 580);
         primaryStage.setScene(scene);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(15);
         grid.setVgap(15);
-//        grid.setPadding(new Insets(25, 25, 25, 25));
 
         for(int j = 0; j < 10; ++j) {
             for(int i = 0; i < 10; ++i) {
