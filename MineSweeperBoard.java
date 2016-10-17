@@ -75,7 +75,7 @@ public class MineSweeperBoard {
 				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
 					continue;
 				}
-				//if the indexs are equal to the coordinate being checked, then skip iteration
+				//if the indexes are equal to the coordinate being checked, then skip iteration
 				else if((i == x) && (j == y)) {
 					continue;
 				}
@@ -89,6 +89,7 @@ public class MineSweeperBoard {
 	}
 
 	public void flag(int x, int y) {
+		//if the flag count is lower than 10 and the cell has not been revealed, then flag cell
 		if(flagsCount < 10 && !cells[x][y].isRevealed()) {
 			cells[x][y].setFlag(true);
 			++flagsCount;
@@ -96,6 +97,7 @@ public class MineSweeperBoard {
 	}
 	
 	public void unflag(int x, int y) {
+		//if the the cell has not been revealed, then flag cell
 		if(!cells[x][y].isRevealed()) {
 			cells[x][y].setFlag(false);
 			--flagsCount;
@@ -103,21 +105,25 @@ public class MineSweeperBoard {
 	}
 
 	public void reveal(int x, int y) {
-		//if the cell clicked is not revealed and the number of cells revealed is 0 (i.e. it is a new game)
+		//if the cell clicked is not revealed
 		if(!cells[x][y].isRevealed()) {
+			//if the unrevealed cell is a mine
 			if (cells[x][y].isMine()) {
 				cells[x][y].setRevealed(true);
 				gameLost = true;
 			}
-			if(cells[x][y].getAdjacent() == 0) {
+			//if the number of adjacent mines for the cell is 0, then repeat method
+			else if(cells[x][y].getAdjacent() == 0) {
 				revealRecursive(x, y);
-			} else {
+			}
+			else {
 				cells[x][y].setRevealed(true);
-				cells[x][y].setFlag(false);
+				unflag(x, y);
 				++revealedCells;
 			}
 		}
 
+		//if the number of revealed cells is equal to the number of non-mine cells
 		if(revealedCells == (xSize * ySize) - totalMines) {
 			gameWon = true;
 		}
@@ -125,20 +131,21 @@ public class MineSweeperBoard {
 	}
 
 	private void revealRecursive(int x, int y) {
+		//loop through adjacent tiles
 		for(int j = y - 1; j <= y + 1; ++j) {
 			for (int i = x - 1; i <= x + 1; ++i) {
+				//if any of the index is out of bounds, then skip iteration
 				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
 					continue;
 				}
 
-				if(!cells[i][j].isRevealed()) {
-					if (cells[i][j].isMine()) {
-						continue;
-					}
+				//if the cell is unrevealed and is not a mine
+				if(!cells[i][j].isRevealed() && !cells[i][j].isMine()) {
 					cells[i][j].setRevealed(true);
-					cells[i][j].setFlag(false);
+					unflag(i, j);
 					++revealedCells;
 
+					//if the number of adjacent mines for the cell is 0, then repeat method
 					if (cells[i][j].getAdjacent() == 0) {
 						revealRecursive(i, j);
 					}
@@ -189,13 +196,5 @@ public class MineSweeperBoard {
 		
 		return grid;
 	}
-
-//	public static void main(String[] args) {
-//		MineSweeperBoard mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
-//
-//		mineSweeperBoard.reveal(3,2);
-//
-//		System.out.println(mineSweeperBoard);
-//	}
 	
 }

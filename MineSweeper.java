@@ -73,10 +73,7 @@ public class MineSweeper extends Application {
                         Cell cellClicked = mineSweeperBoard.getCell(x, y);
 
                         if(event.getButton() == MouseButton.PRIMARY) {
-                            //if the cell clicked is a mine
-//                            if(!cellClicked.isRevealed()) {
-                                mineSweeperBoard.reveal(x, y);
-//                            }
+                            mineSweeperBoard.reveal(x, y);
                         }
                         else if (event.getButton() == MouseButton.SECONDARY) {
                             if (mineSweeperBoard.getFlagsCount() <= 10) {
@@ -110,28 +107,38 @@ public class MineSweeper extends Application {
             }
         });
 
+        updateBoard();
+
         border.setCenter(grid);
 
         primaryStage.show();
     }
 
     private void updateBoard() {
+        //loop through size of board
         for(int j = 0; j < 10; ++j) {
             for (int i = 0; i < 10; ++i) {
                 Cell cell = mineSweeperBoard.getCell(i, j);
                 Button cellBtn =  buttonGrid[i][j];
+
                 if(cell.isRevealed()) {
+                    //if the cell is a revealed mine cell
                     if (cell.isMine()) {
                         cellBtn.setStyle("-fx-background-color: red;");
                         disableAllButtons(true);
-                    } else {
+                    }
+                    //if the cell is a revealed cell
+                    else {
                         cellBtn.setStyle("-fx-background-color: dimgrey; -fx-text-fill: white");
                         cellBtn.setText("" + cell.getAdjacent());
                     }
                 } else {
+                    //if the cell is a unrevealed flagged cell
                     if(cell.isFlag()) {
                         cellBtn.setStyle("-fx-background-color: green;");
-                    } else {
+                    }
+                    //if the cell is a unrevealed cell
+                    else {
                         cellBtn.setStyle((new Button()).getStyle());
                         cellBtn.setText(" ");
                     }
