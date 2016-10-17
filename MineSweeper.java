@@ -38,8 +38,8 @@ public class MineSweeper extends Application {
 
         BorderPane border = new BorderPane();
         HBox hBox = new HBox();
-        hBox.setPadding(new Insets(15, 12, 15, 12));
-        hBox.setSpacing(30);
+        hBox.setPadding(new Insets(10, 12, 10, 12));
+        hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
         border.setTop(hBox);
 
@@ -49,13 +49,13 @@ public class MineSweeper extends Application {
         hBox.getChildren().add(winLossLabel);
         hBox.getChildren().add(exitBtn);
 
-        Scene scene = new Scene(border, 520, 580);
+        Scene scene = new Scene(border, 420, 470);
         primaryStage.setScene(scene);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
-        grid.setHgap(15);
-        grid.setVgap(15);
+        grid.setHgap(5);
+        grid.setVgap(5);
 
         for(int j = 0; j < 10; ++j) {
             for(int i = 0; i < 10; ++i) {
