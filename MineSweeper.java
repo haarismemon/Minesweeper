@@ -79,9 +79,11 @@ public class MineSweeper extends Application {
 //                            }
                         }
                         else if (event.getButton() == MouseButton.SECONDARY) {
-                            if(mineSweeperBoard.getFlagsCount() <= 10) {
-                                if(!cellClicked.isFlag()) {
-                                    mineSweeperBoard.flag(x, y);
+                            if (mineSweeperBoard.getFlagsCount() <= 10) {
+                                if (!cellClicked.isFlag()) {
+                                    mineSweeperBoard.flag(x, y, true);
+                                } else {
+                                    mineSweeperBoard.flag(x, y, false);
                                 }
                             }
                         }
@@ -123,11 +125,12 @@ public class MineSweeper extends Application {
                         cellBtn.setStyle("-fx-background-color: red;");
                         disableAllButtons(true);
                     } else {
+                        cellBtn.setStyle("-fx-background-color: dimgrey; -fx-text-fill: white");
                         cellBtn.setText("" + cell.getAdjacent());
                     }
                 } else {
                     if(cell.isFlag()) {
-                        cellBtn.setText("F");
+                        cellBtn.setStyle("-fx-background-color: green;");
                     } else {
                         cellBtn.setStyle((new Button()).getStyle());
                         cellBtn.setText(" ");

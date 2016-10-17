@@ -88,9 +88,9 @@ public class MineSweeperBoard {
 		return count;
 	}
 
-	public void flag(int x, int y) {
+	public void flag(int x, int y, boolean isFlag) {
 		if(flagsCount < 10) {
-			cells[x][y].setFlag(true);
+			cells[x][y].setFlag(isFlag);
 			++flagsCount;
 		}
 	}
@@ -101,35 +101,48 @@ public class MineSweeperBoard {
 	}
 
 	public void reveal(int x, int y) {
-		//loops through the adjacent tiles
-//		for(int j = y - 1; j <= y + 1; ++j) {
-//			for(int i = x - 1; i <= x + 1; ++i) {
-//				//if any of the index is out of bounds, then skip iteration
-//				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
-//					continue;
-//				} else {
-				if(!cells[x][y].isRevealed()) {
-					if(!cells[x][y].isMine()) {	//meant to be i and j
-						cells[x][y].setRevealed(true);	//meant to be i and j
-						cells[x][y].setFlag(false);	//meant to be i and j
-						++revealedCells;
+		//if the cell clicked is not revealed and the number of cells revealed is 0 (i.e. it is a new game)
+		if(!cells[x][y].isRevealed()) {
+			if (cells[x][y].isMine()) {
+				cells[x][y].setRevealed(true);
+				gameLost = true;
+			}
+			if(cells[x][y].getAdjacent() == 0) {
+				revealRecursive(x, y);
+			} else {
+				cells[x][y].setRevealed(true);
+				cells[x][y].setFlag(false);
+				++revealedCells;
+			}
+		}
 
-						if(revealedCells == (xSize * ySize) - totalMines) {
-							gameWon = true;
-						}
+		if(revealedCells == (xSize * ySize) - totalMines) {
+			gameWon = true;
+		}
 
-					}
-					else {
-//						System.out.println("Game Lost!!! Mine at (" + i + ", " + j + ")");
-						if(cells[x][y].isMine()) {
-							cells[x][y].setRevealed(true);
-							gameLost = true;
-						}
-					}
+	}
+
+	private void revealRecursive(int x, int y) {
+		for(int j = y - 1; j <= y + 1; ++j) {
+			for (int i = x - 1; i <= x + 1; ++i) {
+				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
+					continue;
 				}
 
-//			}
-//		}
+				if(!cells[i][j].isRevealed()) {
+					if (cells[i][j].isMine()) {
+						continue;
+					}
+					cells[i][j].setRevealed(true);
+					cells[i][j].setFlag(false);
+					++revealedCells;
+
+					if (cells[i][j].getAdjacent() == 0) {
+						revealRecursive(i, j);
+					}
+				}
+			}
+		}
 	}
 
 	public Cell getCell(int x, int y) {
