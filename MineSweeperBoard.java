@@ -3,18 +3,18 @@ import java.util.Random;
 public class MineSweeperBoard {
 	
 	private Cell[][] cells;
-	private int xSize;
-	private int ySize;
+
+	private int rows;
+	private int cols;
 	private int flagsCount;
 	private int revealedCells;
 	private boolean gameLost;
 	private boolean gameWon;
 	private int totalMines;
-	
 	public MineSweeperBoard(int x, int y, int numOfMines) {
 		cells = new Cell[x][y];
-		xSize = x;
-		ySize = y;
+		rows = x;
+		cols = y;
 		totalMines = numOfMines;
 
 		newGame(x, y);
@@ -32,12 +32,12 @@ public class MineSweeperBoard {
 			}
 		}
 
-		//loops 10 times		
+		//loops 10 times
 		for (int i = 0; i < 10; ++i) {
 			Random random = new Random();
 			int xCell = random.nextInt(x);
 			int yCell = random.nextInt(y);
-			
+
 			//if the current Cell is already a mine
 			if(cells[xCell][yCell].isMine()) {
 				//keep looping until the current Cell is not a mine
@@ -49,14 +49,14 @@ public class MineSweeperBoard {
 					yCell = random.nextInt(y);
 				}
 			}
-			
+
 			//sets the new Cell to have the mine
 			cells[xCell][yCell].setMine(true);
 		}
 
 		// String s = "";
-		for(int j = 0; j < ySize; ++j) {
-			for(int i = 0; i < xSize; ++i) {
+		for(int j = 0; j < cols; ++j) {
+			for(int i = 0; i < rows; ++i) {
 				cells[i][j].setAdjacent(adjacent(i, j));
 				// s += cells[i][j].getAdjacent();
 			}
@@ -72,7 +72,7 @@ public class MineSweeperBoard {
 		for(int j = y - 1; j <= y + 1; ++j) {
 			for(int i = x - 1; i <= x + 1; ++i) {
 				//if any of the index is out of bounds, then skip iteration
-				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
+				if(i < 0 || i >= rows || j < 0 || j >= cols) {
 					continue;
 				}
 				//if the indexes are equal to the coordinate being checked, then skip iteration
@@ -95,7 +95,7 @@ public class MineSweeperBoard {
 			++flagsCount;
 		}
 	}
-	
+
 	public void unflag(int x, int y) {
 		//if the the cell has not been revealed, then flag cell
 		if(!cells[x][y].isRevealed()) {
@@ -105,26 +105,31 @@ public class MineSweeperBoard {
 	}
 
 	public void reveal(int x, int y) {
+		Cell currentCell = cells[x][y];
 		//if the cell clicked is not revealed
-		if(!cells[x][y].isRevealed()) {
+		if(!currentCell.isRevealed() && !currentCell.isFlag()) {
+			while(getRevealedCells() == 0 && currentCell.isMine()) {
+				newGame(10, 10);
+			}
+
 			//if the unrevealed cell is a mine
-			if (cells[x][y].isMine()) {
-				cells[x][y].setRevealed(true);
+			if (currentCell.isMine()) {
+				currentCell.setRevealed(true);
 				gameLost = true;
 			}
 			//if the number of adjacent mines for the cell is 0, then repeat method
-			else if(cells[x][y].getAdjacent() == 0) {
+			else if(currentCell.getAdjacent() == 0) {
 				revealRecursive(x, y);
 			}
 			else {
-				cells[x][y].setRevealed(true);
+				currentCell.setRevealed(true);
 				unflag(x, y);
 				++revealedCells;
 			}
 		}
 
 		//if the number of revealed cells is equal to the number of non-mine cells
-		if(revealedCells == (xSize * ySize) - totalMines) {
+		if(revealedCells == (rows * cols) - totalMines) {
 			gameWon = true;
 		}
 
@@ -135,7 +140,7 @@ public class MineSweeperBoard {
 		for(int j = y - 1; j <= y + 1; ++j) {
 			for (int i = x - 1; i <= x + 1; ++i) {
 				//if any of the index is out of bounds, then skip iteration
-				if(i < 0 || i >= xSize || j < 0 || j >= ySize) {
+				if(i < 0 || i >= rows || j < 0 || j >= cols) {
 					continue;
 				}
 
@@ -157,7 +162,7 @@ public class MineSweeperBoard {
 	public Cell getCell(int x, int y) {
 		return cells[x][y];
 	}
-	
+
 	public int getFlagsCount() {
 		return flagsCount;
 	}
@@ -174,10 +179,18 @@ public class MineSweeperBoard {
 		return gameWon;
 	}
 
+	public int getRows() {
+		return rows;
+	}
+
+	public int getCols() {
+		return cols;
+	}
+
 	public String toString() {
 		String grid = "";
-		for (int y = 0; y < ySize; ++y) {
-			for (int x = 0; x < xSize; ++x) {
+		for (int y = 0; y < cols; ++y) {
+			for (int x = 0; x < rows; ++x) {
 				if (cells[x][y].isMine() && cells[x][y].isRevealed()) {
 					grid += "O";
 				}
@@ -193,8 +206,8 @@ public class MineSweeperBoard {
 			}
 			grid += "\n";
 		}
-		
+
 		return grid;
 	}
-	
+
 }

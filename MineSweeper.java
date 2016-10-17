@@ -8,9 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 /**
@@ -34,14 +32,12 @@ public class MineSweeper extends Application {
         cellsLabel = new Label("0/100 cells");
         winLossLabel = new Label("Game Outcome");
 
-        primaryStage.setTitle("MineSweeper");
+        primaryStage.setTitle("MineSweeper by Haaris Memon");
 
-        BorderPane border = new BorderPane();
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(10, 12, 10, 12));
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
-        border.setTop(hBox);
 
         hBox.getChildren().add(newGameBtn);
         hBox.getChildren().add(flagLabel);
@@ -49,18 +45,30 @@ public class MineSweeper extends Application {
         hBox.getChildren().add(winLossLabel);
         hBox.getChildren().add(exitBtn);
 
-        Scene scene = new Scene(border, 420, 470);
-        primaryStage.setScene(scene);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(5);
         grid.setVgap(5);
+        grid.setPadding(new Insets(10, 10, 10, 10));
+
+        for(int row = 0; row < mineSweeperBoard.getRows(); ++row) {
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setPercentHeight(100.0 / mineSweeperBoard.getCols());
+            grid.getRowConstraints().add(rowConstraints);
+        }
+
+        for(int cols = 0; cols < mineSweeperBoard.getCols(); ++cols) {
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setPercentWidth(100.0 / mineSweeperBoard.getCols());
+            grid.getColumnConstraints().add(columnConstraints);
+        }
 
         for(int j = 0; j < 10; ++j) {
             for(int i = 0; i < 10; ++i) {
                 Button cellBtn = new Button(" ");
-                cellBtn.setPrefSize(35, 35);
+                cellBtn.setMaxWidth(Double.MAX_VALUE);
+                cellBtn.setMaxHeight(Double.MAX_VALUE);
                 buttonGrid[i][j] = cellBtn;
                 grid.add(cellBtn, i, j);
 
@@ -109,8 +117,12 @@ public class MineSweeper extends Application {
 
         updateBoard();
 
+        BorderPane border = new BorderPane();
+        border.setTop(hBox);
         border.setCenter(grid);
 
+        Scene scene = new Scene(border, 420, 470);
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
@@ -124,18 +136,22 @@ public class MineSweeper extends Application {
                 if(cell.isRevealed()) {
                     //if the cell is a revealed mine cell
                     if (cell.isMine()) {
-                        cellBtn.setStyle("-fx-background-color: red;");
+                        cellBtn.setStyle("-fx-background-color: red; -fx-text-fill: white");
+                        cellBtn.setText("M");
                         disableAllButtons(true);
                     }
                     //if the cell is a revealed cell
                     else {
                         cellBtn.setStyle("-fx-background-color: dimgrey; -fx-text-fill: white");
-                        cellBtn.setText("" + cell.getAdjacent());
+                        if(cell.getAdjacent() != 0) {
+                            cellBtn.setText("" + cell.getAdjacent());
+                        }
                     }
                 } else {
                     //if the cell is a unrevealed flagged cell
                     if(cell.isFlag()) {
-                        cellBtn.setStyle("-fx-background-color: green;");
+                        cellBtn.setStyle("-fx-background-color: green; -fx-text-fill: white");
+                        cellBtn.setText("F");
                     }
                     //if the cell is a unrevealed cell
                     else {
@@ -150,12 +166,15 @@ public class MineSweeper extends Application {
         cellsLabel.setText(mineSweeperBoard.getRevealedCells() + "/100 cells");
 
         if(mineSweeperBoard.isGameLost()) {
-            winLossLabel.setText("Game Over");
+            winLossLabel.setText("You Lost!");
+            winLossLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
         } else if (mineSweeperBoard.isGameWon()) {
-            winLossLabel.setText("Game Won!");
+            winLossLabel.setText("You Won!");
+            winLossLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
             disableAllButtons(true);
         } else {
             winLossLabel.setText("Game Outcome");
+            winLossLabel.setStyle("-fx-text-fill: black; -fx-font-weight: normal;");
         }
     }
 
@@ -166,7 +185,6 @@ public class MineSweeper extends Application {
             }
         }
     }
-
 
     public static void main(String[] args) {
         launch(args);
