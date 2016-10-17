@@ -88,16 +88,18 @@ public class MineSweeperBoard {
 		return count;
 	}
 
-	public void flag(int x, int y, boolean isFlag) {
-		if(flagsCount < 10) {
-			cells[x][y].setFlag(isFlag);
+	public void flag(int x, int y) {
+		if(flagsCount < 10 && !cells[x][y].isRevealed()) {
+			cells[x][y].setFlag(true);
 			++flagsCount;
 		}
 	}
 	
 	public void unflag(int x, int y) {
-		cells[x][y].setFlag(false);
-		--flagsCount;
+		if(!cells[x][y].isRevealed()) {
+			cells[x][y].setFlag(false);
+			--flagsCount;
+		}
 	}
 
 	public void reveal(int x, int y) {

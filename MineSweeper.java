@@ -81,9 +81,9 @@ public class MineSweeper extends Application {
                         else if (event.getButton() == MouseButton.SECONDARY) {
                             if (mineSweeperBoard.getFlagsCount() <= 10) {
                                 if (!cellClicked.isFlag()) {
-                                    mineSweeperBoard.flag(x, y, true);
+                                    mineSweeperBoard.flag(x, y);
                                 } else {
-                                    mineSweeperBoard.flag(x, y, false);
+                                    mineSweeperBoard.unflag(x, y);
                                 }
                             }
                         }
