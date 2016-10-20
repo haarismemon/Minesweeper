@@ -125,7 +125,6 @@ public class MineSweeperBoard {
 			}
 			else {
 				currentCell.setRevealed(true);
-//				unflag(x, y);
 				++revealedCells;
 			}
 		}
@@ -146,14 +145,15 @@ public class MineSweeperBoard {
 					continue;
 				}
 
+				Cell currentCell = cells[i][j];
+
 				//if the cell is unrevealed and is not a mine
-				if(!cells[i][j].isRevealed() && !cells[i][j].isMine()) {
-					cells[i][j].setRevealed(true);
-//					unflag(i, j);
+				if(!currentCell.isRevealed() && !currentCell.isMine() && !currentCell.isFlag()) {
+					currentCell.setRevealed(true);
 					++revealedCells;
 
 					//if the number of adjacent mines for the cell is 0, then repeat method
-					if (cells[i][j].getAdjacent() == 0) {
+					if (currentCell.getAdjacent() == 0) {
 						revealRecursive(i, j);
 					}
 				}
