@@ -10,32 +10,38 @@ public class MineSweeperBoard {
 	private int revealedCells;
 	private boolean gameLost;
 	private boolean gameWon;
-
 	private int totalMines;
 
-	public MineSweeperBoard(int x, int y, int numOfMines) {
+	private int level;
+
+//	public MineSweeperBoard(int x, int y, int numOfMines) {
+//		cells = new Cell[x][y];
+//		rows = x;
+//		cols = y;
+//		totalMines = numOfMines;
+//
+//		newGame(x, y, numOfMines);
+//	}
+
+	public void newGame(int x, int y, int numOfMines) {
 		cells = new Cell[x][y];
 		rows = x;
 		cols = y;
 		totalMines = numOfMines;
 
-		newGame(x, y);
-	}
-
-	public void newGame(int x, int y) {
 		flagsCount = 0;
 		revealedCells = 0;
 		gameLost = false;
 		gameWon = false;
 
-		for (int j = 0; j < x; ++j) {
-			for (int i = 0; i < y; ++i) {
+		for (int j = 0; j < cols; ++j) {
+			for (int i = 0; i < rows; ++i) {
 				cells[i][j] = new Cell();
 			}
 		}
 
 		//loops 10 times
-		for (int i = 0; i < 10; ++i) {
+		for (int i = 0; i < totalMines; ++i) {
 			Random random = new Random();
 			int xCell = random.nextInt(x);
 			int yCell = random.nextInt(y);
@@ -111,7 +117,7 @@ public class MineSweeperBoard {
 		//if the cell clicked is not revealed
 		if(!currentCell.isRevealed() && !currentCell.isFlag()) {
 			while(getRevealedCells() == 0 && currentCell.isMine()) {
-				newGame(10, 10);
+				newGame(rows, cols, totalMines);
 			}
 
 			//if the unrevealed cell is a mine
@@ -191,6 +197,14 @@ public class MineSweeperBoard {
 
 	public int getTotalMines() {
 		return totalMines;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	public String toString() {

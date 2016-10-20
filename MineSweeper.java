@@ -21,14 +21,21 @@ public class MineSweeper extends Application {
     private Label flagLabel;
     private Label cellsLabel;
     private Label winLossLabel;
+    private GridPane grid;
+    private Button easyBtn;
+    private Button mediumBtn;
+    private Button hardBtn;
 
     public void start(Stage primaryStage) {
-        mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
+        mineSweeperBoard = new MineSweeperBoard();
+        mineSweeperBoard.newGame(9, 9, 10);
         buttonGrid = new Button[mineSweeperBoard.getRows()][mineSweeperBoard.getCols()];
 
-        Button easyBtn = new Button("Easy");
-        Button mediumBtn = new Button("Medium");
-        Button hardBtn = new Button("Hard");
+        mineSweeperBoard.setLevel(0);
+
+        easyBtn = new Button("Easy");
+        mediumBtn = new Button("Medium");
+        hardBtn = new Button("Hard");
         Button exitBtn = new Button("Exit");
         flagLabel = new Label("0/" + mineSweeperBoard.getTotalMines() + " flags");
         cellsLabel = new Label("0/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
@@ -50,22 +57,81 @@ public class MineSweeper extends Application {
         hBox.getChildren().add(exitBtn);
 
 
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(5);
-        grid.setVgap(5);
-        grid.setPadding(new Insets(10, 10, 10, 10));
+        BorderPane border = new BorderPane();
+        border.setTop(hBox);
+
+        grid = newGrid();
+        border.setCenter(grid);
+
+        easyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mineSweeperBoard.newGame(9, 9, 10);
+                mineSweeperBoard.setLevel(0);
+                grid = newGrid();
+                border.setCenter(grid);
+                disableAllButtons(false);
+                updateBoard();
+            }
+        });
+
+        mediumBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mineSweeperBoard.newGame(16,16,40);
+                mineSweeperBoard.setLevel(1);
+                grid = newGrid();
+                border.setCenter(grid);
+                disableAllButtons(false);
+                updateBoard();
+            }
+        });
+
+        hardBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mineSweeperBoard.newGame(30, 16, 99);
+                mineSweeperBoard.setLevel(2);
+                grid = newGrid();
+                border.setCenter(grid);
+                disableAllButtons(false);
+                updateBoard();
+            }
+        });
+
+        exitBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                primaryStage.close();
+            }
+        });
+
+        updateBoard();
+
+        Scene scene = new Scene(border, 550, 580);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private GridPane newGrid() {
+        buttonGrid = new Button[mineSweeperBoard.getRows()][mineSweeperBoard.getCols()];
+
+        GridPane gridButtons = new GridPane();
+        gridButtons.setAlignment(Pos.CENTER);
+        gridButtons.setHgap(5);
+        gridButtons.setVgap(5);
+        gridButtons.setPadding(new Insets(10, 10, 10, 10));
 
         for(int row = 0; row < mineSweeperBoard.getRows(); ++row) {
             RowConstraints rowConstraints = new RowConstraints();
             rowConstraints.setPercentHeight(100.0 / mineSweeperBoard.getCols());
-            grid.getRowConstraints().add(rowConstraints);
+            gridButtons.getRowConstraints().add(rowConstraints);
         }
 
         for(int cols = 0; cols < mineSweeperBoard.getCols(); ++cols) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setPercentWidth(100.0 / mineSweeperBoard.getCols());
-            grid.getColumnConstraints().add(columnConstraints);
+            columnConstraints.setPercentWidth(100.0 / mineSweeperBoard.getRows());
+            gridButtons.getColumnConstraints().add(columnConstraints);
         }
 
         for(int j = 0; j < mineSweeperBoard.getCols(); ++j) {
@@ -74,7 +140,7 @@ public class MineSweeper extends Application {
                 cellBtn.setMaxWidth(Double.MAX_VALUE);
                 cellBtn.setMaxHeight(Double.MAX_VALUE);
                 buttonGrid[i][j] = cellBtn;
-                grid.add(cellBtn, i, j);
+                gridButtons.add(cellBtn, i, j);
 
                 final int x = i;
                 final int y = j;
@@ -99,35 +165,10 @@ public class MineSweeper extends Application {
                         updateBoard();
                     }
                 });
-
             }
         }
 
-        easyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                mineSweeperBoard.newGame(10,10);
-                disableAllButtons(false);
-                updateBoard();
-            }
-        });
-
-        exitBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                primaryStage.close();
-            }
-        });
-
-        updateBoard();
-
-        BorderPane border = new BorderPane();
-        border.setTop(hBox);
-        border.setCenter(grid);
-
-        Scene scene = new Scene(border, 550, 580);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        return gridButtons;
     }
 
     private void updateBoard() {
@@ -166,6 +207,20 @@ public class MineSweeper extends Application {
             }
         }
 
+        if(mineSweeperBoard.getLevel() == 0) {
+            easyBtn.setStyle("-fx-background-color: cornflowerblue");
+            mediumBtn.setStyle((new Button()).getStyle());
+            hardBtn.setStyle((new Button()).getStyle());
+        } else if(mineSweeperBoard.getLevel() == 1) {
+            easyBtn.setStyle((new Button()).getStyle());
+            mediumBtn.setStyle("-fx-background-color: cornflowerblue");
+            hardBtn.setStyle((new Button()).getStyle());
+        } else if(mineSweeperBoard.getLevel() == 2) {
+            easyBtn.setStyle((new Button()).getStyle());
+            mediumBtn.setStyle((new Button()).getStyle());
+            hardBtn.setStyle("-fx-background-color: cornflowerblue");
+        }
+
         flagLabel.setText(mineSweeperBoard.getFlagsCount() + "/" + mineSweeperBoard.getTotalMines() + " flags");
         cellsLabel.setText(mineSweeperBoard.getRevealedCells() + "/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
 
@@ -188,6 +243,10 @@ public class MineSweeper extends Application {
                 buttonGrid[i][j].setDisable(bool);
             }
         }
+    }
+
+    private void setDifficulty(int level) {
+
     }
 
     public static void main(String[] args) {
