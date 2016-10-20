@@ -11,12 +11,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 /**
  * Created by Haaris on 16/10/2016.
  */
 public class MineSweeper extends Application {
 
     private Button[][] buttonGrid;
+    private ArrayList<Button> difficultyButtons;
     private MineSweeperBoard mineSweeperBoard;
     private Label flagLabel;
     private Label cellsLabel;
@@ -30,12 +33,16 @@ public class MineSweeper extends Application {
         mineSweeperBoard = new MineSweeperBoard();
         mineSweeperBoard.newGame(9, 9, 10);
         buttonGrid = new Button[mineSweeperBoard.getRows()][mineSweeperBoard.getCols()];
+        difficultyButtons = new ArrayList<Button>();
 
         mineSweeperBoard.setLevel(0);
 
         easyBtn = new Button("Easy");
+        difficultyButtons.add(easyBtn);
         mediumBtn = new Button("Medium");
+        difficultyButtons.add(mediumBtn);
         hardBtn = new Button("Hard");
+        difficultyButtons.add(hardBtn);
         Button exitBtn = new Button("Exit");
         flagLabel = new Label("0/" + mineSweeperBoard.getTotalMines() + " flags");
         cellsLabel = new Label("0/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
@@ -63,41 +70,28 @@ public class MineSweeper extends Application {
         grid = newGrid();
         border.setCenter(grid);
 
-        easyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                mineSweeperBoard.newGame(9, 9, 10);
-                mineSweeperBoard.setLevel(0);
-                grid = newGrid();
-                border.setCenter(grid);
-                disableAllButtons(false);
-                updateBoard();
-            }
-        });
+        for(Button btn : difficultyButtons) {
+            btn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if(btn.getText().equals("Easy")) {
+                        mineSweeperBoard.newGame(9, 9, 10);
+                        mineSweeperBoard.setLevel(0);
+                    } else if(btn.getText().equals("Medium")) {
+                        mineSweeperBoard.newGame(16,16,40);
+                        mineSweeperBoard.setLevel(1);
+                    } else if(btn.getText().equals("Hard")) {
+                        mineSweeperBoard.newGame(30, 16, 99);
+                        mineSweeperBoard.setLevel(2);
+                    }
 
-        mediumBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                mineSweeperBoard.newGame(16,16,40);
-                mineSweeperBoard.setLevel(1);
-                grid = newGrid();
-                border.setCenter(grid);
-                disableAllButtons(false);
-                updateBoard();
-            }
-        });
-
-        hardBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                mineSweeperBoard.newGame(30, 16, 99);
-                mineSweeperBoard.setLevel(2);
-                grid = newGrid();
-                border.setCenter(grid);
-                disableAllButtons(false);
-                updateBoard();
-            }
-        });
+                    grid = newGrid();
+                    border.setCenter(grid);
+                    disableAllButtons(false);
+                    updateBoard();
+                }
+            });
+        }
 
         exitBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override

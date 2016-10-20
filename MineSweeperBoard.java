@@ -11,7 +11,6 @@ public class MineSweeperBoard {
 	private boolean gameLost;
 	private boolean gameWon;
 	private int totalMines;
-
 	private int level;
 
 //	public MineSweeperBoard(int x, int y, int numOfMines) {
