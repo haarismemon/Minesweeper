@@ -26,7 +26,9 @@ public class MineSweeper extends Application {
         mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
         buttonGrid = new Button[mineSweeperBoard.getRows()][mineSweeperBoard.getCols()];
 
-        Button newGameBtn = new Button("New Game");
+        Button easyBtn = new Button("Easy");
+        Button mediumBtn = new Button("Medium");
+        Button hardBtn = new Button("Hard");
         Button exitBtn = new Button("Exit");
         flagLabel = new Label("0/" + mineSweeperBoard.getTotalMines() + " flags");
         cellsLabel = new Label("0/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
@@ -39,7 +41,9 @@ public class MineSweeper extends Application {
         hBox.setSpacing(20);
         hBox.setAlignment(Pos.CENTER);
 
-        hBox.getChildren().add(newGameBtn);
+        hBox.getChildren().add(easyBtn);
+        hBox.getChildren().add(mediumBtn);
+        hBox.getChildren().add(hardBtn);
         hBox.getChildren().add(flagLabel);
         hBox.getChildren().add(cellsLabel);
         hBox.getChildren().add(winLossLabel);
@@ -99,7 +103,7 @@ public class MineSweeper extends Application {
             }
         }
 
-        newGameBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        easyBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 mineSweeperBoard.newGame(10,10);
@@ -121,7 +125,7 @@ public class MineSweeper extends Application {
         border.setTop(hBox);
         border.setCenter(grid);
 
-        Scene scene = new Scene(border, 420, 470);
+        Scene scene = new Scene(border, 550, 580);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
