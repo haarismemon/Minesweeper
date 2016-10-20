@@ -24,12 +24,12 @@ public class MineSweeper extends Application {
 
     public void start(Stage primaryStage) {
         mineSweeperBoard = new MineSweeperBoard(10, 10, 10);
-        buttonGrid = new Button[10][10];
+        buttonGrid = new Button[mineSweeperBoard.getRows()][mineSweeperBoard.getCols()];
 
         Button newGameBtn = new Button("New Game");
         Button exitBtn = new Button("Exit");
-        flagLabel = new Label("0/10 flags");
-        cellsLabel = new Label("0/100 cells");
+        flagLabel = new Label("0/" + mineSweeperBoard.getTotalMines() + " flags");
+        cellsLabel = new Label("0/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
         winLossLabel = new Label("Game Outcome");
 
         primaryStage.setTitle("MineSweeper by Haaris Memon");
@@ -64,8 +64,8 @@ public class MineSweeper extends Application {
             grid.getColumnConstraints().add(columnConstraints);
         }
 
-        for(int j = 0; j < 10; ++j) {
-            for(int i = 0; i < 10; ++i) {
+        for(int j = 0; j < mineSweeperBoard.getCols(); ++j) {
+            for(int i = 0; i < mineSweeperBoard.getRows(); ++i) {
                 Button cellBtn = new Button(" ");
                 cellBtn.setMaxWidth(Double.MAX_VALUE);
                 cellBtn.setMaxHeight(Double.MAX_VALUE);
@@ -128,8 +128,8 @@ public class MineSweeper extends Application {
 
     private void updateBoard() {
         //loop through size of board
-        for(int j = 0; j < 10; ++j) {
-            for (int i = 0; i < 10; ++i) {
+        for(int j = 0; j < mineSweeperBoard.getCols(); ++j) {
+            for (int i = 0; i < mineSweeperBoard.getRows(); ++i) {
                 Cell cell = mineSweeperBoard.getCell(i, j);
                 Button cellBtn =  buttonGrid[i][j];
 
@@ -162,8 +162,8 @@ public class MineSweeper extends Application {
             }
         }
 
-        flagLabel.setText(mineSweeperBoard.getFlagsCount() + "/10 flags");
-        cellsLabel.setText(mineSweeperBoard.getRevealedCells() + "/100 cells");
+        flagLabel.setText(mineSweeperBoard.getFlagsCount() + "/" + mineSweeperBoard.getTotalMines() + " flags");
+        cellsLabel.setText(mineSweeperBoard.getRevealedCells() + "/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
 
         if(mineSweeperBoard.isGameLost()) {
             winLossLabel.setText("You Lost!");
@@ -179,8 +179,8 @@ public class MineSweeper extends Application {
     }
 
     private void disableAllButtons(boolean bool) {
-        for(int j = 0; j < 10; ++j) {
-            for (int i = 0; i < 10; ++i) {
+        for(int j = 0; j < mineSweeperBoard.getCols(); ++j) {
+            for (int i = 0; i < mineSweeperBoard.getRows(); ++i) {
                 buttonGrid[i][j].setDisable(bool);
             }
         }

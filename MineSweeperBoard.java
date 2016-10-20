@@ -10,7 +10,9 @@ public class MineSweeperBoard {
 	private int revealedCells;
 	private boolean gameLost;
 	private boolean gameWon;
+
 	private int totalMines;
+
 	public MineSweeperBoard(int x, int y, int numOfMines) {
 		cells = new Cell[x][y];
 		rows = x;
@@ -123,7 +125,7 @@ public class MineSweeperBoard {
 			}
 			else {
 				currentCell.setRevealed(true);
-				unflag(x, y);
+//				unflag(x, y);
 				++revealedCells;
 			}
 		}
@@ -147,7 +149,7 @@ public class MineSweeperBoard {
 				//if the cell is unrevealed and is not a mine
 				if(!cells[i][j].isRevealed() && !cells[i][j].isMine()) {
 					cells[i][j].setRevealed(true);
-					unflag(i, j);
+//					unflag(i, j);
 					++revealedCells;
 
 					//if the number of adjacent mines for the cell is 0, then repeat method
@@ -185,6 +187,10 @@ public class MineSweeperBoard {
 
 	public int getCols() {
 		return cols;
+	}
+
+	public int getTotalMines() {
+		return totalMines;
 	}
 
 	public String toString() {
