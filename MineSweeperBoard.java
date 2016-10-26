@@ -15,15 +15,7 @@ public class MineSweeperBoard {
 	private int totalMines;
 	private int level;
 	private Date start;
-
-//	public MineSweeperBoard(int x, int y, int numOfMines) {
-//		cells = new Cell[x][y];
-//		rows = x;
-//		cols = y;
-//		totalMines = numOfMines;
-//
-//		newGame(x, y, numOfMines);
-//	}
+	private Date timeDifference;
 
 	public void newGame(int x, int y, int numOfMines) {
 		cells = new Cell[x][y];
@@ -35,10 +27,6 @@ public class MineSweeperBoard {
 		revealedCells = 0;
 		gameLost = false;
 		gameWon = false;
-
-		//time starts now
-		start = new Date();
-//		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 
 		for (int j = 0; j < cols; ++j) {
 			for (int i = 0; i < rows; ++i) {
@@ -126,14 +114,18 @@ public class MineSweeperBoard {
 				newGame(rows, cols, totalMines);
 			}
 
+			if(getRevealedCells() == 0) {
+				//time starts now
+				start = new Date();
+			}
+
 			//if the unrevealed cell is a mine
 			if (currentCell.isMine()) {
 				currentCell.setRevealed(true);
 				gameLost = true;
 				Date now = new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-				Date timeDifference = new Date(now.getTime() - start.getTime());
-				System.out.println(timeDifference.getSeconds());
+				timeDifference = new Date(now.getTime() - start.getTime());
 			}
 			//if the number of adjacent mines for the cell is 0, then repeat method
 			else if(currentCell.getAdjacent() == 0) {
@@ -215,6 +207,10 @@ public class MineSweeperBoard {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public int getElapsedTime() {
+		return ((timeDifference.getMinutes() * 60) + timeDifference.getSeconds());
 	}
 
 	public String toString() {
