@@ -120,7 +120,7 @@ public class MineSweeperBoard {
 	public void reveal(int x, int y) {
 		//Before a cell is revealed, push the state of the board onto undoStack
 		undoStack.push(cells);
-		
+
 		Cell currentCell = cells[x][y];
 		//if the cell clicked is not revealed
 		if(!currentCell.isRevealed() && !currentCell.isFlag()) {
@@ -173,6 +173,10 @@ public class MineSweeperBoard {
 				}
 			}
 		}
+	}
+
+	public void undo() {
+		cells = undoStack.pop();
 	}
 
 	public Cell getCell(int x, int y) {
