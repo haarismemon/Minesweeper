@@ -176,9 +176,11 @@ public class MineSweeperBoard {
 	}
 
 	public void undo() {
-		Cell[][] tempCells = undoStack.pop();
-		redoStack.push(tempCells);
-		cells = tempCells;
+		if (!undoStack.isEmpty()) {
+			Cell[][] tempCells = undoStack.pop();
+			redoStack.push(tempCells);
+			cells = tempCells;
+		}
 	}
 
 	public Cell getCell(int x, int y) {
