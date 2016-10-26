@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Stack;
 
 public class MineSweeperBoard {
 	
@@ -12,6 +13,8 @@ public class MineSweeperBoard {
 	private boolean gameWon;
 	private int totalMines;
 	private int level;
+	private Stack<Cell[][]> undoStack;
+	private Stack<Cell[][]> redoStack;
 
 //	public MineSweeperBoard(int x, int y, int numOfMines) {
 //		cells = new Cell[x][y];
@@ -32,6 +35,9 @@ public class MineSweeperBoard {
 		revealedCells = 0;
 		gameLost = false;
 		gameWon = false;
+
+		undoStack = new Stack<>();
+		redoStack = new Stack<>();
 
 		for (int j = 0; j < cols; ++j) {
 			for (int i = 0; i < rows; ++i) {
