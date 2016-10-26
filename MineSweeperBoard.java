@@ -177,8 +177,22 @@ public class MineSweeperBoard {
 
 	public void undo() {
 		if (!undoStack.isEmpty()) {
+			//Get the previous state of the board
 			Cell[][] tempCells = undoStack.pop();
+			//Push the current state of the board to redoStack
 			redoStack.push(tempCells);
+			//Update board with previous state
+			cells = tempCells;
+		}
+	}
+
+	public void redo() {
+		if (!redoStack.isEmpty()) {
+			//Get the last undone state of the board
+			Cell[][] tempCells = redoStack.pop();
+			//Push current state of the board to undoStack
+			undoStack.push(cells);
+			//Update board with last undone state
 			cells = tempCells;
 		}
 	}
