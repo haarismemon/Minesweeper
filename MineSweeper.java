@@ -81,7 +81,7 @@ public class MineSweeper extends Application {
                         mineSweeperBoard.newGame(16,16,40);
                         mineSweeperBoard.setLevel(1);
                     } else if(btn.getText().equals("Hard")) {
-                        mineSweeperBoard.newGame(30, 16, 99);
+                        mineSweeperBoard.newGame(20, 16, 99);
                         mineSweeperBoard.setLevel(2);
                     }
 
@@ -102,7 +102,7 @@ public class MineSweeper extends Application {
 
         updateBoard();
 
-        Scene scene = new Scene(border, 550, 580);
+        Scene scene = new Scene(border, 1000, 580);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
