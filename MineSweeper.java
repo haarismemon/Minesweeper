@@ -48,7 +48,10 @@ public class MineSweeper extends Application {
         cellsLabel = new Label("0/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
         winLossLabel = new Label("Game Outcome");
 
-        primaryStage.setTitle("MineSweeper by Haaris Memon");
+        Button undoBtn = new Button("Undo");
+        Button redoBtn = new Button("Redo");
+
+        primaryStage.setTitle("MineSweeper by Haaris Memon & Khalil Ahmed");
 
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(10, 12, 10, 12));
@@ -61,6 +64,8 @@ public class MineSweeper extends Application {
         hBox.getChildren().add(flagLabel);
         hBox.getChildren().add(cellsLabel);
         hBox.getChildren().add(winLossLabel);
+        hBox.getChildren().add(undoBtn);
+        hBox.getChildren().add(redoBtn);
         hBox.getChildren().add(exitBtn);
 
 
