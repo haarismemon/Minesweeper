@@ -28,6 +28,8 @@ public class MineSweeper extends Application {
     private Button easyBtn;
     private Button mediumBtn;
     private Button hardBtn;
+    private Button undoBtn;
+    private Button redoBtn;
 
     public void start(Stage primaryStage) {
         mineSweeperBoard = new MineSweeperBoard();
@@ -48,8 +50,8 @@ public class MineSweeper extends Application {
         cellsLabel = new Label("0/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
         winLossLabel = new Label("Game Outcome");
 
-        Button undoBtn = new Button("Undo");
-        Button redoBtn = new Button("Redo");
+        undoBtn = new Button("Undo");
+        redoBtn = new Button("Redo");
 
         primaryStage.setTitle("MineSweeper by Haaris Memon & Khalil Ahmed");
 
