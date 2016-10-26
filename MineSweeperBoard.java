@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 public class MineSweeperBoard {
@@ -12,6 +14,7 @@ public class MineSweeperBoard {
 	private boolean gameWon;
 	private int totalMines;
 	private int level;
+	private Date start;
 
 //	public MineSweeperBoard(int x, int y, int numOfMines) {
 //		cells = new Cell[x][y];
@@ -32,6 +35,10 @@ public class MineSweeperBoard {
 		revealedCells = 0;
 		gameLost = false;
 		gameWon = false;
+
+		//time starts now
+		start = new Date();
+//		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 
 		for (int j = 0; j < cols; ++j) {
 			for (int i = 0; i < rows; ++i) {
@@ -123,6 +130,10 @@ public class MineSweeperBoard {
 			if (currentCell.isMine()) {
 				currentCell.setRevealed(true);
 				gameLost = true;
+				Date now = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+				Date timeDifference = new Date(now.getTime() - start.getTime());
+				System.out.println(timeDifference.getSeconds());
 			}
 			//if the number of adjacent mines for the cell is 0, then repeat method
 			else if(currentCell.getAdjacent() == 0) {
