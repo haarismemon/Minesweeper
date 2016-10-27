@@ -13,8 +13,8 @@ public class MineSweeperBoard {
 	private boolean gameWon;
 	private int totalMines;
 	private int level;
-	private Stack<Cell[][]> undoStack;
-	private Stack<Cell[][]> redoStack;
+	private Stack<BoardState> undoStack;
+	private Stack<BoardState> redoStack;
 
 //	public MineSweeperBoard(int x, int y, int numOfMines) {
 //		cells = new Cell[x][y];
@@ -119,7 +119,7 @@ public class MineSweeperBoard {
 
 	public void reveal(int x, int y) {
 		//Before a cell is revealed, push the state of the board onto undoStack
-		undoStack.push(cells);
+		undoStack.push(new BoardState(cells, flagsCount, revealedCells, gameLost, gameWon));
 
 		Cell currentCell = cells[x][y];
 		//if the cell clicked is not revealed
@@ -177,23 +177,35 @@ public class MineSweeperBoard {
 
 	public void undo() {
 		if (!undoStack.isEmpty()) {
+			BoardState bs = undoStack.pop();
 			//Get the previous state of the board
-			Cell[][] tempCells = undoStack.pop();
+			Cell[][] tempCells = bs.getCells();
 			//Push the current state of the board to redoStack
-			redoStack.push(tempCells);
+			redoStack.push(new BoardState(cells, flagsCount, revealedCells, gameLost, gameWon));
 			//Update board with previous state
 			cells = tempCells;
+
+			flagsCount = bs.getFlagsCount();
+			revealedCells = bs.getRevealedCells();
+			gameLost = bs.isGameLost();
+			gameWon = bs.isGameWon();
 		}
 	}
 
 	public void redo() {
 		if (!redoStack.isEmpty()) {
+			BoardState bs = redoStack.pop();
 			//Get the last undone state of the board
-			Cell[][] tempCells = redoStack.pop();
+			Cell[][] tempCells = bs.getCells();
 			//Push current state of the board to undoStack
-			undoStack.push(cells);
+			undoStack.push(new BoardState(cells, flagsCount, revealedCells, gameLost, gameWon));
 			//Update board with last undone state
 			cells = tempCells;
+
+			flagsCount = bs.getFlagsCount();
+			revealedCells = bs.getRevealedCells();
+			gameLost = bs.isGameLost();
+			gameWon = bs.isGameWon();
 		}
 	}
 
