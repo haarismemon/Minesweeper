@@ -24,6 +24,7 @@ public class MineSweeper extends Application {
     private Label flagLabel;
     private Label cellsLabel;
     private Label winLossLabel;
+    private Label timeLabel;
     private GridPane grid;
     private Button easyBtn;
     private Button mediumBtn;
@@ -47,6 +48,7 @@ public class MineSweeper extends Application {
         flagLabel = new Label("0/" + mineSweeperBoard.getTotalMines() + " flags");
         cellsLabel = new Label("0/" + (mineSweeperBoard.getRows() * mineSweeperBoard.getCols()) + " cells");
         winLossLabel = new Label("Game Outcome");
+        timeLabel = new Label("Time:  ");
 
         primaryStage.setTitle("MineSweeper by Haaris Memon");
 
@@ -61,6 +63,7 @@ public class MineSweeper extends Application {
         hBox.getChildren().add(flagLabel);
         hBox.getChildren().add(cellsLabel);
         hBox.getChildren().add(winLossLabel);
+        hBox.getChildren().add(timeLabel);
         hBox.getChildren().add(exitBtn);
 
 
@@ -85,6 +88,7 @@ public class MineSweeper extends Application {
                         mineSweeperBoard.setLevel(2);
                     }
 
+                    timeLabel.setText("Time: ");
                     grid = newGrid();
                     border.setCenter(grid);
                     disableAllButtons(false);
@@ -146,6 +150,9 @@ public class MineSweeper extends Application {
 
                         if(event.getButton() == MouseButton.PRIMARY) {
                             mineSweeperBoard.reveal(x, y);
+                            if(mineSweeperBoard.isGameWon() || mineSweeperBoard.isGameLost()) {
+                                timeLabel.setText("Time: " + mineSweeperBoard.getElapsedTime());
+                            }
                         }
                         else if (event.getButton() == MouseButton.SECONDARY) {
                             if (mineSweeperBoard.getFlagsCount() <= 10) {
