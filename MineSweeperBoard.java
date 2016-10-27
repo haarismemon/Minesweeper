@@ -176,30 +176,21 @@ public class MineSweeperBoard {
 	}
 
 	public void undo() {
-		if (!undoStack.isEmpty()) {
-			BoardState bs = undoStack.pop();
-			//Get the previous state of the board
-			Cell[][] tempCells = bs.getCells();
-			//Push the current state of the board to redoStack
-			redoStack.push(new BoardState(cells, flagsCount, revealedCells, gameLost, gameWon));
-			//Update board with previous state
-			cells = tempCells;
-
-			flagsCount = bs.getFlagsCount();
-			revealedCells = bs.getRevealedCells();
-			gameLost = bs.isGameLost();
-			gameWon = bs.isGameWon();
-		}
+		handleBoardTransition(undoStack, redoStack);
 	}
 
 	public void redo() {
-		if (!redoStack.isEmpty()) {
-			BoardState bs = redoStack.pop();
-			//Get the last undone state of the board
+		handleBoardTransition(redoStack, undoStack);
+	}
+
+	private void handleBoardTransition(Stack<BoardState> from, Stack<BoardState> to) {
+		if (!from.isEmpty()) {
+			BoardState bs = from.pop();
+			//Get the previous state of the board
 			Cell[][] tempCells = bs.getCells();
-			//Push current state of the board to undoStack
-			undoStack.push(new BoardState(cells, flagsCount, revealedCells, gameLost, gameWon));
-			//Update board with last undone state
+			//Push the current state of the board to redoStack
+			to.push(new BoardState(cells, flagsCount, revealedCells, gameLost, gameWon));
+			//Update board with previous state
 			cells = tempCells;
 
 			flagsCount = bs.getFlagsCount();
